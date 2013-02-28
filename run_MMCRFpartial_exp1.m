@@ -130,7 +130,7 @@ if 1==1
 
     pa=[mmcrf_cs;selRes];
     pa=[[0,mmcrf_gs]',pa]
-    dlmwrite(sprintf('../parameters/%s_parammcrftree',name{1}),pa)
+    dlmwrite(sprintf('../parameters/%s_parammcrftree',paramsIn.filestem),pa)
 else
     mmcrf_c=mmcrf_cs(1)
     mmcrf_g=mmcrf_gs(1)
