@@ -14,7 +14,7 @@ end
 
 for name=names
 [~,comres]=system('hostname');
-if strcmp(comres(1:4),'dave')
+if or(strcmp(comres(1:4),'dave'), strcmp(comres(1:4),'ukko'))
     X=dlmread(sprintf('/fs/group/urenzyme/workspace/data/%s_features',name{1}));
     Y=dlmread(sprintf('/fs/group/urenzyme/workspace/data/%s_targets',name{1}));
 else
@@ -57,7 +57,7 @@ Ind = getCVIndex(Y,nfold);
 
 % get dot product kernels from normalized features or just read precomputed kernels
 if or(strcmp(name{1},'fp'),strcmp(name{1},'cancer'))
-    if strcmp(comres(1:4),'dave')
+    if or(strcmp(comres(1:4),'dave'), strcmp(comres(1:4),'ukko'))
         K=dlmread(sprintf('/fs/group/urenzyme/workspace/data/%s_kernel',name{1}));
     else
         K=dlmread(sprintf('../../ensemble_mmcrf/shared_scripts/test_data/%s_kernel',name{1}));
@@ -91,7 +91,7 @@ if 1==1
             paramsIn.max_CGD_iter = 1;		% maximum number of conditional gradient iterations per example
             paramsIn.max_LBP_iter = 2;		% number of Loopy belief propagation iterations
             paramsIn.tolerance = 1E-10;		% numbers smaller than this are treated as zero
-            paramsIn.filestem = sprintf('tmp_%s_%.2f',name{1},P_missing);		% file name stem used for writing output
+            paramsIn.filestem = sprintf('tmp_%s_%.2f',name{1},P_missingIn);		% file name stem used for writing output
             paramsIn.profile_tm_interval = 10;	% how often to test during learning
             paramsIn.maxiter = 5;		% maximum number of iterations in the outer loop
             paramsIn.verbosity = 1;
@@ -100,7 +100,7 @@ if 1==1
             rand('twister', 0);
             % generate random graph
             Nnode=size(Y,2);
-            E=randTreeGenerator(Nnode); % generate
+            E=randGraphGenerator(Nnode,'Tree'); % generate
             E=[E,min(E,[],2),max(E,[],2)];E=E(:,3:4); % arrange head and tail
             dataIn.E=sortrows(E,[1,2]); % sort by head and tail
             Itrain = IselTrain;
